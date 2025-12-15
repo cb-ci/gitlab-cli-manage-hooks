@@ -5,7 +5,7 @@ This repository contains 3 scripts to manage webhooks in GitLab projects:
 - [hook-add.sh](hook-add.sh): Adds a webhook to a list of projects.
 - [hook-delete.sh](hook-delete.sh): Deletes a webhook from a list of projects.
 - [set-env.sh.template](set-env.sh.template): Common configurations for both hook script (above). 
->  cp set-env.sh.template set-env.sh.
+>  cp set-env.sh.template set-env.sh
 
 
 ## Configuration
@@ -13,7 +13,7 @@ This repository contains 3 scripts to manage webhooks in GitLab projects:
 Create your copy of the `set-env.sh`and adjust your variables
     
 ```bash
-  cp set-env.sh.template set-env.sh.
+  cp set-env.sh.template set-env.sh
 ```
 Both scripts read their configuration from the top of the file. You need to set the following variables in `set-env.sh`:
 
