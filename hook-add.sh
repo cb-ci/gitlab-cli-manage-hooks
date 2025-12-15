@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./set.env.sh
+source ./set-env.sh
 
 # --- SCRIPT LOGIC ---
 
