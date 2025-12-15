@@ -4,7 +4,7 @@ This repository contains 3 scripts to manage webhooks in GitLab projects:
 
 - [hook-add.sh](hook-add.sh): Adds a webhook to a list of projects.
 - [hook-delete.sh](hook-delete.sh): Deletes a webhook from a list of projects.
-- [set-env.sh.template](set-env.sh.template)[hook-delete.sh](hook-delete.sh): Common configurations for both hook script (above). 
+- [set-env.sh.template](set-env.sh.template): Common configurations for both hook script (above). 
 
 ## Configuration
 
