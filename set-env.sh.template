@@ -5,7 +5,7 @@
 export GITLAB_TOKEN="YOUR_GITLAB_TOKEN"
 
 # The Webhook URL you want to manage
-export WEBHOOK_TARGET="YOUR_WEBHOOK_TARGET"
+export WEBHOOK_TARGET="YOUR_WEBHOOK_TARGET" # fe.e "https://ci.webhook.example.com/hook"
 
 # The Base API URL (Change if using self-hosted GitLab)
 export API_URL="https://gitlab.com/api/v4"
@@ -15,7 +15,7 @@ export API_URL="https://gitlab.com/api/v4"
 export PROJECTS=(
     "YOUR_GRUOP/YOUR_PROJECT1"
     "YOUR_GRUOP/YOUR_PROJECT2"
-    "YOUR_GRUOP/YOUR_PROJECT3"
+    "YOUR_GRUOP/YOUR_PROJECTN"
 )
 
 # example
