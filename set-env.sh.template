@@ -13,9 +13,9 @@ export API_URL="https://gitlab.com/api/v4"
 # List of Project Paths (Namespace/ProjectName) or Numeric IDs
 # You can add as many as you need inside the parentheses
 export PROJECTS=(
-    "YOUR_GRUOP/YOUR_PROJECT1"
-    "YOUR_GRUOP/YOUR_PROJECT2"
-    "YOUR_GRUOP/YOUR_PROJECTN"
+    "YOUR_GROUP/YOUR_PROJECT1"
+    "YOUR_GROUP/YOUR_PROJECT2"
+    "YOUR_GROUP/YOUR_PROJECTN"
 )
 
 # example
@@ -24,4 +24,16 @@ export PROJECTS=(
 #    "group12345678/project2"
 #    "group12345678/projectN"
 #)
+
+
+## Below varialbes are required for the hook-update.sh script 
+
+# Reference Webhook URL (The hook on the reference project to copy permissions from)
+export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
+
+# Webhook Secret Token (Optional - leave empty if none)
+export WEBHOOK_SECRET="your_secret_token"
+
+# Reference Project to copy hook permissions from (Namespace/ProjectName)
+export REFERENCE_PROJECT="YOUR_GROUP/YOUR_REFERENCE_PROJECT"
 
