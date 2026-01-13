@@ -3,7 +3,8 @@
 This repository contains 3 scripts to manage webhooks in GitLab projects:
 
 - [hook-add.sh](hook-add.sh): Adds a webhook to a list of projects.
-- [hook-update.sh](hook-update.sh): Adds or Updates a webhook on a list of projects, copying permissions from a reference hook.
+- [hook-update.sh](hook-update.sh): Adds or Updates a webhook on a list of projects, copying permissions from an existing hook (Reference URL) to a new Target URL on the same project.
+ Optional, you can set a webhook secret 
 - [hook-delete.sh](hook-delete.sh): Deletes a webhook from a list of projects.
 - [set-env.sh.template](set-env.sh.template): Common configurations for both hook script (above). 
 >  cp set-env.sh.template set-env.sh
@@ -69,9 +70,9 @@ flowchart TD
     Add -->|Checks existence| TargetProjects
     Add -->|POST if missing| TargetProjects
     
-    Update -->|1. Get Hook Config| RefProject
-    Update -->|2. Check existence| TargetProjects
-    Update -->|3. POST/PUT with Ref Permissions| TargetProjects
+    Update -->|1. List Hooks| TargetProjects
+    Update -->|2. Extract Config from Ref URL| TargetProjects
+    Update -->|3. POST/PUT to Target URL| TargetProjects
     
     Delete -->|Checks existance| TargetProjects
     Delete -->|DELETE if found| TargetProjects
@@ -95,8 +96,7 @@ Both scripts read their configuration from the top of the file. You need to set 
 - `PROJECTS`: A list of project paths or numeric IDs.
 
 **For `hook-update.sh` specifically:**
-- `REFERENCE_PROJECT`: The project to copy hook permissions from.
-- `WEBHOOK_REFERENCE_URL`: The URL of the specific hook on the reference project.
+- `WEBHOOK_REFERENCE_URL`: The URL of the existing hook to copy permissions from.
 - `WEBHOOK_SECRET`: (Optional) The secret token for the hook.
 
 ## Usage

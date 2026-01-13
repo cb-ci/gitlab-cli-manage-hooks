@@ -34,6 +34,5 @@ export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
 # Webhook Secret Token (Optional - leave empty if none)
 export WEBHOOK_SECRET="your_secret_token"
 
-# Reference Project to copy hook permissions from (Namespace/ProjectName)
-export REFERENCE_PROJECT="YOUR_GROUP/YOUR_REFERENCE_PROJECT"
+
 
