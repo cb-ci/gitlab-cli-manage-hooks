@@ -8,6 +8,41 @@ This repository contains 3 scripts to manage webhooks in GitLab projects:
 - [set-env.sh.template](set-env.sh.template): Common configurations for both hook script (above). 
 >  cp set-env.sh.template set-env.sh
 
+## Architecture Migration
+
+These scripts allow for moving from a Monolithic CI Controller reference to Dedicated Controllers per project/team.
+
+```mermaid
+flowchart TD
+    subgraph Current ["Current State (Monolith)"]
+        direction TB
+        M_P1[Project 1]
+        M_P2[Project 2]
+        M_P3[Project 3]
+        Monolith[CI Monolith]
+        
+        M_P1 & M_P2 & M_P3 -->|Refers to| Monolith
+    end
+
+    subgraph Future ["Future State (Distributed)"]
+        direction TB
+        F_P1[Project 1]
+        F_P2[Project 2]
+        F_P3[Project 3]
+        
+        C1[Controller Team A]
+        C2[Controller Team B]
+        C3[Controller Team C]
+        
+        F_P1 -->|Refers to| C1
+        F_P2 -->|Refers to| C2
+        F_P3 -->|Refers to| C3
+    end
+    
+    style Current fill:#f9f2f4,stroke:#333,stroke-width:2px
+    style Future fill:#e1f7d5,stroke:#333,stroke-width:2px
+```
+
 ## Workflow Diagram
 
 ```mermaid
