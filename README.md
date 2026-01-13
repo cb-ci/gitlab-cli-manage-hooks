@@ -8,6 +8,43 @@ This repository contains 3 scripts to manage webhooks in GitLab projects:
 - [set-env.sh.template](set-env.sh.template): Common configurations for both hook script (above). 
 >  cp set-env.sh.template set-env.sh
 
+## Workflow Diagram
+
+```mermaid
+flowchart TD
+    User((Operator))
+    Config[Configuration\nset-env.sh]
+    
+    subgraph Scripts
+        Add[hook-add.sh]
+        Update[hook-update.sh]
+        Delete[hook-delete.sh]
+    end
+    
+    subgraph GitLab["GitLab API"]
+        RefProject[Reference Project]
+        TargetProjects[Target Projects]
+    end
+
+    User -->|Configures| Config
+    Config --> Add
+    Config --> Update
+    Config --> Delete
+    
+    Add -->|Checks existence| TargetProjects
+    Add -->|POST if missing| TargetProjects
+    
+    Update -->|1. Get Hook Config| RefProject
+    Update -->|2. Check existence| TargetProjects
+    Update -->|3. POST/PUT with Ref Permissions| TargetProjects
+    
+    Delete -->|Checks existance| TargetProjects
+    Delete -->|DELETE if found| TargetProjects
+    
+    style Add fill:#d4f1f4,stroke:#000,stroke-width:2px
+    style Update fill:#d4f1f4,stroke:#000,stroke-width:2px
+    style Delete fill:#f4d4d4,stroke:#000,stroke-width:2px
+```
 
 ## Configuration
 
