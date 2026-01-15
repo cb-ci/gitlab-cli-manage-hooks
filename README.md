@@ -50,7 +50,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     User((Operator))
-    Config[Configuration(set-env.sh)]
+    Config[Configuration set-env.sh]
     
     subgraph Scripts
         Add[hook-add.sh]
