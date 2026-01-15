@@ -15,15 +15,6 @@ These scripts allow for moving from a Monolithic CI Controller reference to Dedi
 
 ```mermaid
 flowchart TD
-    subgraph Current ["Current State (Monolith)"]
-        direction TB
-        M_P1[Project 1]
-        M_P2[Project 2]
-        M_P3[Project 3]
-        Monolith[CI Monolith]
-        
-        M_P1 & M_P2 & M_P3 -->|Refers to| Monolith
-    end
 
     subgraph Future ["Future State (Distributed)"]
         direction TB
@@ -39,6 +30,16 @@ flowchart TD
         F_P2 -->|Refers to| C2
         F_P3 -->|Refers to| C3
     end
+
+    subgraph Current ["Current State (Monolith)"]
+        direction TB
+        M_P1[Project 1]
+        M_P2[Project 2]
+        M_P3[Project 3]
+        Monolith[CI Controller Monolith]
+        
+        M_P1 & M_P2 & M_P3 -->|Refers to| Monolith
+    end
     
     style Current fill:#f9f2f4,stroke:#333,stroke-width:2px
     style Future fill:#e1f7d5,stroke:#333,stroke-width:2px
@@ -49,7 +50,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     User((Operator))
-    Config[Configuration\nset-env.sh]
+    Config[Configuration(set-env.sh)]
     
     subgraph Scripts
         Add[hook-add.sh]
@@ -58,8 +59,8 @@ flowchart TD
     end
     
     subgraph GitLab["GitLab API"]
-        RefProject[Reference Project]
-        TargetProjects[Target Projects]
+        RefProject[Reference WebHook]
+        TargetProjects[Target WebHook Projects]
     end
 
     User -->|Configures| Config
