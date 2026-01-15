@@ -60,7 +60,7 @@ flowchart TD
     
     subgraph GitLab["GitLab API"]
         RefProject[Reference WebHook]
-        TargetProjects[Target WebHook Projects]
+        TargetProjects[Target WebHook]
     end
 
     User -->|Configures| Config
