@@ -2,8 +2,8 @@
 
 This repository contains 3 scripts to manage webhooks in GitLab projects:
 
-- [hook-add.sh](hook-add.sh): Adds a webhook to a list of projects.
-- [hook-update.sh](hook-update.sh): Adds or Updates a webhook on a list of projects, copying permissions from an existing hook (Reference URL) to a new Target URL on the same project.
+- [hook-add-simple.sh](hook-add-simple.sh): Adds a webhook to a list of projects.
+- [hook-update-simple.sh](hook-update-simple.sh): Adds or Updates a webhook on a list of projects, copying permissions from an existing hook (Reference URL) to a new Target URL on the same project.
  Optional, you can set a webhook secret 
 - [hook-delete.sh](hook-delete.sh): Deletes a webhook from a list of projects.
 - [set-env.sh.template](set-env.sh.template): Common configurations for both hook script (above). 
@@ -109,11 +109,9 @@ chmod +x hook-delete.sh
 chmod +x hook-update.sh
 ```
 3. Run the desired script:
-```bash
-./hook-add.sh
+./hook-add-simple.sh
 ./hook-delete.sh
-./hook-update.sh
-```
+./hook-update-simple.sh
 
 
 Manual step-by-step guide to securely connecting GitLab to Jenkins using a Secret Token.
