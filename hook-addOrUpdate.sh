@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ./set-env.sh
-set -x
+#set -x
 # Ensure jq is installed
 if ! command -v jq &> /dev/null; then
     echo "❌ ERROR: 'jq' is not installed. Please install it to use this script."
