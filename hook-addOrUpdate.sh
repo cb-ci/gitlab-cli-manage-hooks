@@ -32,17 +32,16 @@ do
     # Find if the target hook already exists
     EXISTING_HOOK_ID=$(echo "$LIST_BODY" | jq -r --arg url "$WEBHOOK_TARGET" '.[] | select(.url == $url) | .id')
 
-    # The default payload, if no WE
+    # The default payload, if no WEBHOOK_REFERENCE_URL is set
     HOOK_PAYLOAD=$(jq -n \
         --arg url "$WEBHOOK_TARGET" \
-        --arg token "9f3b2049d5a86374827d9401235a86493820a1b2" \
-        '{url: $url, token: $token, push_events: true}')
+        '{url: $url, push_events: true}')
     
-    # 
+    # If a reference WEBHOOK_REFERENCE_URL is set, copy permissions from it
     if [ ! -z "$WEBHOOK_REFERENCE_URL" ]; then
         echo -n "✅ Reference URL set to $WEBHOOK_REFERENCE_URL."
         echo ""
-        HOOK_PAYLOAD=$(echo "$LIST_BODY" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" --arg secret "$WEBHOOK_SECRET" '
+        HOOK_PAYLOAD=$(echo "$LIST_BODY" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" '
                 .[] | select(.url == $url) | 
                 {
                     url: $target_url,
