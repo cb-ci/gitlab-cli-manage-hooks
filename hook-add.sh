@@ -33,7 +33,10 @@ do
     # Find if the target hook already exists
     EXISTING_HOOK_ID=$(echo "$LIST_BODY" | jq -r --arg url "$WEBHOOK_TARGET" '.[] | select(.url == $url) | .id')
 
-    HOOK_PAYLOAD=$(echo "$LIST_BODY" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" --arg secret "$WEBHOOK_SECRET" '
+    # Determine the reference URL (fallback to target if reference is not set)
+    REF_URL="${WEBHOOK_REFERENCE_URL:-$WEBHOOK_TARGET}"
+
+    HOOK_PAYLOAD=$(echo "$LIST_BODY" | jq -c --arg url "$REF_URL" --arg target_url "$WEBHOOK_TARGET" --arg secret "$WEBHOOK_SECRET" '
     .[] | select(.url == $url) | 
     {
         url: $target_url,
