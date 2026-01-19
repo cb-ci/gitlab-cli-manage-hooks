@@ -114,3 +114,79 @@ chmod +x hook-update.sh
 ./hook-delete.sh
 ./hook-update.sh
 ```
+
+
+Manual step-by-step guide to securely connecting GitLab to Jenkins using a Secret Token.
+
+# 1. Generate a Secret Token
+
+First, generate a strong random string. This will be the "password" that GitLab sends and Jenkins verifies.
+
+Run this in your terminal:
+
+```bash
+openssl rand -hex 20
+# Example Output: 9f3b2049d5a86374827d9401235a86493820a1b2
+
+```
+
+*Copy this string. You will need to paste the exact same string into both systems.*
+
+---
+
+## 2. Configure Jenkins (The Receiver)
+
+You need to tell Jenkins to expect this specific token.
+
+1. **Navigate to your Job:** Open the specific Jenkins Job (or Multibranch Pipeline) you want to trigger.
+2. **Configure:** Click **Configure** in the left sidebar.
+3. **Build Triggers:** Scroll down to **Build Triggers**.
+4. **Enable GitLab:** Check the box **"Build when a change is pushed to GitLab. GitLab webhook URL: ..."**
+5. **Advanced Settings:** Click the **Advanced...** button inside that section.
+6. **Set the Token:**
+* Locate the **Secret token** field.
+* Paste the token you generated in Step 1.
+* *Note: If you leave this empty, anyone on the internet can trigger your builds.*
+
+
+7. **Save:** Click **Save**.
+
+---
+
+## 3. Configure GitLab (The Sender)
+
+Now configure GitLab to send that token with every request.
+
+1. **Navigate to Project:** Open your repository in GitLab.
+2. **Settings:** Go to **Settings > Webhooks** (left sidebar).
+3. **Add new webhook:**
+* **URL:** Paste your Jenkins Webhook URL (e.g., `https://jenkins.company.com/project/my-job`).
+* **Secret Token:** Paste the **same token** from Step 1.
+* **Trigger:** Check "Push events" and "Merge request events".
+* **SSL verification:** Uncheck this ONLY if you are using a self-signed certificate (like in a dev environment).
+
+
+4. **Save:** Click **Add webhook**.
+
+---
+
+## 4. Verify the Connection
+
+1. **Test via GitLab:**
+* Scroll down to the webhook you just created in GitLab.
+* Click **Test > Push events**.
+* You should see a blue bar appear at the top saying `Hook executed successfully: HTTP 200`.
+
+
+2. **Check Jenkins:**
+* Look at the build history of your Jenkins job. You should see a new build starting.
+
+
+
+## Troubleshooting Common Errors
+
+| Error Code | Meaning | Fix |
+| --- | --- | --- |
+| **403 Forbidden** | The tokens do not match. | Re-paste the token in both Jenkins and GitLab to ensure they are identical. |
+| **401 Unauthorized** | Jenkins Authentication is blocking the request. | Ensure your "GitLab Plugin" configuration in **Manage Jenkins > System** allows unauthenticated access for webhooks (this is safe because the Secret Token provides the security). |
+| **404 Not Found** | Wrong URL. | Check that the URL in GitLab matches exactly what Jenkins displayed in Step 2.4. |
