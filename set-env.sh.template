@@ -10,14 +10,14 @@ export WEBHOOK_TARGET="YOUR_WEBHOOK_TARGET" # fe.e "https://ci.webhook.example.c
 # The Base API URL (Change if using self-hosted GitLab)
 export API_URL="https://gitlab.com/api/v4"
 
-export GROUP="16860950"
+export GROUP="YOUR_GITLAB_GROUP"
 
 # List of Project Paths (Namespace/ProjectName) or Numeric IDs
 # You can add as many as you need inside the parentheses
 export PROJECTS=(
-    "${GROUP}/YOUR_PROJECT1"
-    "${GROUP}/YOUR_PROJECT2"
-    "${GROUP}/YOUR_PROJECTN"
+    "YOUR_PROJECT1"
+    "YOUR_PROJECT2"
+    "YOUR_PROJECTN"
 )
 
 # example

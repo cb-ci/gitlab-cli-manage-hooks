@@ -8,7 +8,7 @@ for PROJECT in "${PROJECTS[@]}"
 do
     echo "--------------------------------------------------"
     echo "Processing Project: $PROJECT"
-
+    PROJECT=$GROUP/$PROJECT
     # 1. URL Encode the project path
     ENCODED_PROJECT=$(echo "$PROJECT" | sed 's/\//%2F/g')
 

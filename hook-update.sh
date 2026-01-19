@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ./set-env.sh
-
+set -x
 # Ensure jq is installed
 if ! command -v jq &> /dev/null; then
     echo "❌ ERROR: 'jq' is not installed. Please install it to use this script."
@@ -15,6 +15,7 @@ echo "--------------------------------------------------"
 for PROJECT in "${PROJECTS[@]}"
 do
     echo "Processing Project: $PROJECT"
+    PROJECT=$GROUP/$PROJECT
     ENCODED_PROJECT=$(echo "$PROJECT" | sed 's/\//%2F/g')
 
     # 2. Check for existing hook in the target project
