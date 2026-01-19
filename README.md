@@ -58,8 +58,7 @@ flowchart TD
     end
     
     subgraph GitLab["GitLab API"]
-        RefProject[Reference WebHook]
-        TargetProjects[Target WebHook]
+        ProjectHooks[Project WebHooks]
     end
 
     User -->|Configures| Config
@@ -67,15 +66,14 @@ flowchart TD
     Config --> AddSimple
     Config --> Delete
     
-    Add -->|1. List Hooks| TargetProjects
-    Add -->|2. Extract Config from Ref| RefProject
-    Add -->|3. POST (Create) or PUT (Update)| TargetProjects
+    Add -->|1. List (Find Ref & Target)| ProjectHooks
+    Add -->|2. POST (Create) or PUT (Update)| ProjectHooks
     
-    AddSimple -->|1. Check existence| TargetProjects
-    AddSimple -->|2. POST if missing| TargetProjects
+    AddSimple -->|1. Check existence| ProjectHooks
+    AddSimple -->|2. POST if missing| ProjectHooks
 
-    Delete -->|Checks existance| TargetProjects
-    Delete -->|DELETE if found| TargetProjects
+    Delete -->|Checks existance| ProjectHooks
+    Delete -->|DELETE if found| ProjectHooks
     
     style Add fill:#d4f1f4,stroke:#000,stroke-width:2px
     style AddSimple fill:#e1f7d5,stroke:#000,stroke-width:2px
@@ -117,9 +115,9 @@ chmod +x hook-delete.sh
 ```
 
 
-Manual step-by-step guide to securely connecting GitLab to Jenkins using a Secret Token.
+# Manual step-by-step guide to securely connecting GitLab to Jenkins using a Secret Token.
 
-# 1. Generate a Secret Token
+## 1. Generate a Secret Token
 
 First, generate a strong random string. This will be the "password" that GitLab sends and Jenkins verifies.
 
