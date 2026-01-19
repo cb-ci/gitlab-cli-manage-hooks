@@ -45,6 +45,37 @@ flowchart TD
 
 
 
+
+## Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant U as Operator
+    participant S as Script (hook-addOrUpdate)
+    participant G as GitLab API
+
+    U->>S: Run Script
+    S->>S: Load Configuration (set-env.sh)
+    
+    loop For each Project
+        S->>G: GET /projects/:id/hooks
+        G-->>S: Return List of Hooks
+        
+        S->>S: createPayLoad()
+        Note right of S: 1. Find Ref Hook Config<br/>2. Add Secret Token
+        
+        alt Hook Exists
+            S->>G: PUT /projects/:id/hooks/:hook_id
+            G-->>S: 200 OK
+        else Hook Missing
+            S->>G: POST /projects/:id/hooks
+            G-->>S: 201 Created
+        end
+    end
+    
+    S-->>U: Done
+```
+
 ## Configuration
 
 Create your copy of the `set-env.sh` and adjust your variables:
