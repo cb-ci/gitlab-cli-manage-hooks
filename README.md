@@ -44,41 +44,7 @@ flowchart TD
     style Future fill:#e1f7d5,stroke:#333,stroke-width:2px
 ```
 
-## Workflow Diagram
 
-```mermaid
-flowchart TD
-    User((Operator))
-    Config[Configuration set-env.sh]
-    
-    subgraph Scripts
-        Add[hook-addOrUpdate.sh]
-        AddSimple[hook-add-simple.sh]
-        Delete[hook-delete.sh]
-    end
-    
-    subgraph GitLab["GitLab API"]
-        ProjectHooks[Project WebHooks]
-    end
-
-    User -->|Configures| Config
-    Config --> Add
-    Config --> AddSimple
-    Config --> Delete
-    
-    Add -->|"1. List (Find Ref & Target)"| ProjectHooks
-    Add -->|2. POST (Create) or PUT (Update)| ProjectHooks
-    
-    AddSimple -->|1. Check existence| ProjectHooks
-    AddSimple -->|2. POST if missing| ProjectHooks
-
-    Delete -->|Checks existance| ProjectHooks
-    Delete -->|DELETE if found| ProjectHooks
-    
-    style Add fill:#d4f1f4,stroke:#000,stroke-width:2px
-    style AddSimple fill:#e1f7d5,stroke:#000,stroke-width:2px
-    style Delete fill:#f4d4d4,stroke:#000,stroke-width:2px
-```
 
 ## Configuration
 
