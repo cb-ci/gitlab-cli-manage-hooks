@@ -11,37 +11,21 @@ fi
 echo "✅ Reference config loaded."
 echo "--------------------------------------------------"
 
-for PROJECT in "${PROJECTS[@]}"
-do
-    echo "Processing Project: $PROJECT"
-    PROJECT=$GITLAB_GROUP/$PROJECT
-    ENCODED_PROJECT=$(echo "$PROJECT" | sed 's/\//%2F/g')
 
-    # 2. Check for existing hook in the target project
-    LIST_RESPONSE=$(curl --silent --write-out "\n%{http_code}" \
-        --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
-        "$API_URL/projects/$ENCODED_PROJECT/hooks")
-    
-    LIST_STATUS=$(echo "$LIST_RESPONSE" | tail -n1)
-    LIST_BODY=$(echo "$LIST_RESPONSE" | sed '$d')
-    if [ "$LIST_STATUS" -ne 200 ]; then
-        echo "⚠️ FAILED to list hooks for $PROJECT (Status: $LIST_STATUS). Skipping."
-        continue
-    fi
-
-    # Find if the target hook already exists
-    EXISTING_HOOK_ID=$(echo "$LIST_BODY" | jq -r --arg url "$WEBHOOK_TARGET" '.[] | select(.url == $url) | .id')
+createPayLoad() {
+    local list_body="$1"
+    local hook_payload
 
     # The default payload, if no WEBHOOK_REFERENCE_URL is set
-    HOOK_PAYLOAD=$(jq -n \
+    hook_payload=$(jq -n \
         --arg url "$WEBHOOK_TARGET" \
         '{url: $url, push_events: true}')
     
     # If a reference WEBHOOK_REFERENCE_URL is set, copy permissions from it
     if [ ! -z "$WEBHOOK_REFERENCE_URL" ]; then
-        echo -n "✅ Reference URL set to $WEBHOOK_REFERENCE_URL."
-        echo ""
-        HOOK_PAYLOAD=$(echo "$LIST_BODY" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" '
+        echo -n "✅ Reference URL set to $WEBHOOK_REFERENCE_URL." >&2
+        echo "" >&2
+        hook_payload=$(echo "$list_body" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" '
                 .[] | select(.url == $url) | 
                 {
                     url: $target_url,
@@ -75,7 +59,34 @@ do
     fi
 
     # Add secret if WEBHOOK_SECRET set
-    HOOK_PAYLOAD=$(echo "$HOOK_PAYLOAD" | jq --arg secret "$WEBHOOK_SECRET" '. + (if $secret != "" then {token: $secret} else {} end)')
+    hook_payload=$(echo "$hook_payload" | jq --arg secret "$WEBHOOK_SECRET" '. + (if $secret != "" then {token: $secret} else {} end)')
+
+    echo "$hook_payload"
+}
+
+for PROJECT in "${PROJECTS[@]}"
+do
+    echo "Processing Project: $PROJECT"
+    PROJECT=$GITLAB_GROUP/$PROJECT
+    ENCODED_PROJECT=$(echo "$PROJECT" | sed 's/\//%2F/g')
+
+    # 2. Check for existing hook in the target project
+    LIST_RESPONSE=$(curl --silent --write-out "\n%{http_code}" \
+        --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
+        "$API_URL/projects/$ENCODED_PROJECT/hooks")
+    
+    LIST_STATUS=$(echo "$LIST_RESPONSE" | tail -n1)
+    LIST_BODY=$(echo "$LIST_RESPONSE" | sed '$d')
+    if [ "$LIST_STATUS" -ne 200 ]; then
+        echo "⚠️ FAILED to list hooks for $PROJECT (Status: $LIST_STATUS). Skipping."
+        continue
+    fi
+
+    # Find if the target hook already exists
+    EXISTING_HOOK_ID=$(echo "$LIST_BODY" | jq -r --arg url "$WEBHOOK_TARGET" '.[] | select(.url == $url) | .id')
+
+    # Create the payload using the extracted function
+    HOOK_PAYLOAD=$(createPayLoad "$LIST_BODY")
 
     echo "Hook payload: $HOOK_PAYLOAD"
 
