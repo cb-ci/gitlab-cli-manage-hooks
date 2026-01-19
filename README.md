@@ -6,7 +6,6 @@ This repository contains 3 scripts to manage webhooks in GitLab projects:
 - [hook-add-simple.sh](hook-add-simple.sh): **Simple Add (Bootstrap)**. Adds a webhook with default permissions to a list of projects. Use this for adding hooks to new projects that have none.
 - [hook-delete.sh](hook-delete.sh): Deletes a webhook (Target URL) from a list of projects.
 - [set-env.sh.template](set-env.sh.template): Common configurations for the scripts.
->  cp set-env.sh.template set-env.sh
 
 ## Architecture Migration
 
@@ -64,6 +63,12 @@ Both scripts read their configuration from the top of the file. You need to set 
 - `WEBHOOK_SECRET`: (Optional) The secret token for the hook.
 
 ## Usage
+
+1. Copy the `set-env.sh.template` to `set-env.sh` and adjust your variables:
+```bash
+  cp set-env.sh.template set-env.sh
+```
+
 
 2. Make the scripts executable:
 ```bash
