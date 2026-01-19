@@ -25,7 +25,7 @@ do
     
     LIST_STATUS=$(echo "$LIST_RESPONSE" | tail -n1)
     LIST_BODY=$(echo "$LIST_RESPONSE" | sed '$d')
-
+    echo -n  "LIST BODY: $LIST_BODY"
     if [ "$LIST_STATUS" -ne 200 ]; then
         echo "⚠️ FAILED to list hooks for $PROJECT (Status: $LIST_STATUS). Skipping."
         continue
@@ -43,6 +43,12 @@ do
         merge_requests_events,
         repository_update_events,
         enable_ssl_verification,
+        alert_status,
+        disabled_until,
+        push_events_branch_filter,
+        branch_filter_strategy,
+        custom_webhook_template,
+        project_id,
         issues_events,
         confidential_issues_events,
         note_events,
@@ -50,10 +56,17 @@ do
         pipeline_events,
         wiki_page_events,
         deployment_events,
+        feature_flag_events,
         job_events,
-        releases_events
+        releases_events,
+        milestone_events,
+        emoji_events,
+        resource_access_token_events,
+        vulnerability_events
     } + (if $secret != "" then {token: $secret} else {} end)
     ')
+
+
 
 
 
