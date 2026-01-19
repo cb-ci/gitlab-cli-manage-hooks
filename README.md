@@ -66,7 +66,7 @@ flowchart TD
     Config --> AddSimple
     Config --> Delete
     
-    Add -->|1. List (Find Ref & Target)| ProjectHooks
+    Add -->|"1. List (Find Ref & Target)"| ProjectHooks
     Add -->|2. POST (Create) or PUT (Update)| ProjectHooks
     
     AddSimple -->|1. Check existence| ProjectHooks
