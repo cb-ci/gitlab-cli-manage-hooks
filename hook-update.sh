@@ -1,13 +1,12 @@
 #!/bin/bash
 
 source ./set-env.sh
-set -x
+#set -x
 # Ensure jq is installed
 if ! command -v jq &> /dev/null; then
     echo "❌ ERROR: 'jq' is not installed. Please install it to use this script."
     exit 1
 fi
-
 
 echo "✅ Reference config loaded."
 echo "--------------------------------------------------"
@@ -65,10 +64,6 @@ do
         vulnerability_events
     } + (if $secret != "" then {token: $secret} else {} end)
     ')
-
-
-
-
 
     if [ -n "$EXISTING_HOOK_ID" ] && [ "$EXISTING_HOOK_ID" != "null" ]; then
         echo "ℹ️ Hook exists (ID: $EXISTING_HOOK_ID). Updating..."
