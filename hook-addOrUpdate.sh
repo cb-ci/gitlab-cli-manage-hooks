@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ./set-env.sh
-# set -x
+set -x
 # Ensure jq is installed
 if ! command -v jq &> /dev/null; then
     echo "❌ ERROR: 'jq' is not installed. Please install it to use this script."
@@ -24,7 +24,6 @@ do
     
     LIST_STATUS=$(echo "$LIST_RESPONSE" | tail -n1)
     LIST_BODY=$(echo "$LIST_RESPONSE" | sed '$d')
-    echo -n  "LIST BODY: $LIST_BODY"
     if [ "$LIST_STATUS" -ne 200 ]; then
         echo "⚠️ FAILED to list hooks for $PROJECT (Status: $LIST_STATUS). Skipping."
         continue
@@ -33,40 +32,54 @@ do
     # Find if the target hook already exists
     EXISTING_HOOK_ID=$(echo "$LIST_BODY" | jq -r --arg url "$WEBHOOK_TARGET" '.[] | select(.url == $url) | .id')
 
-    # Determine the reference URL (fallback to target if reference is not set)
-    REF_URL="${WEBHOOK_REFERENCE_URL:-$WEBHOOK_TARGET}"
+    # The default payload, if no WE
+    HOOK_PAYLOAD=$(jq -n \
+        --arg url "$WEBHOOK_TARGET" \
+        --arg token "9f3b2049d5a86374827d9401235a86493820a1b2" \
+        '{url: $url, token: $token, push_events: true}')
+    
+    # 
+    if [ ! -z "$WEBHOOK_REFERENCE_URL" ]; then
+        echo -n "✅ Reference URL set to $WEBHOOK_REFERENCE_URL."
+        echo ""
+        HOOK_PAYLOAD=$(echo "$LIST_BODY" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" --arg secret "$WEBHOOK_SECRET" '
+                .[] | select(.url == $url) | 
+                {
+                    url: $target_url,
+                    push_events,
+                    tag_push_events,
+                    merge_requests_events,
+                    repository_update_events,
+                    enable_ssl_verification,
+                    alert_status,
+                    disabled_until,
+                    push_events_branch_filter,
+                    branch_filter_strategy,
+                    custom_webhook_template,
+                    project_id,
+                    issues_events,
+                    confidential_issues_events,
+                    note_events,
+                    confidential_note_events,
+                    pipeline_events,
+                    wiki_page_events,
+                    deployment_events,
+                    feature_flag_events,
+                    job_events,
+                    releases_events,
+                    milestone_events,
+                    emoji_events,
+                    resource_access_token_events,
+                    vulnerability_events
+                }
+                ')
+    fi
 
-    HOOK_PAYLOAD=$(echo "$LIST_BODY" | jq -c --arg url "$REF_URL" --arg target_url "$WEBHOOK_TARGET" --arg secret "$WEBHOOK_SECRET" '
-    .[] | select(.url == $url) | 
-    {
-        url: $target_url,
-        push_events,
-        tag_push_events,
-        merge_requests_events,
-        repository_update_events,
-        enable_ssl_verification,
-        alert_status,
-        disabled_until,
-        push_events_branch_filter,
-        branch_filter_strategy,
-        custom_webhook_template,
-        project_id,
-        issues_events,
-        confidential_issues_events,
-        note_events,
-        confidential_note_events,
-        pipeline_events,
-        wiki_page_events,
-        deployment_events,
-        feature_flag_events,
-        job_events,
-        releases_events,
-        milestone_events,
-        emoji_events,
-        resource_access_token_events,
-        vulnerability_events
-    } + (if $secret != "" then {token: $secret} else {} end)
-    ')
+    # Add secret if WEBHOOK_SECRET set
+    HOOK_PAYLOAD=$(echo "$HOOK_PAYLOAD" | jq --arg secret "$WEBHOOK_SECRET" '. + (if $secret != "" then {token: $secret} else {} end)')
+
+    echo "Hook payload: $HOOK_PAYLOAD"
+
 
     if [ -n "$EXISTING_HOOK_ID" ] && [ "$EXISTING_HOOK_ID" != "null" ]; then
         echo "ℹ️ Hook exists (ID: $EXISTING_HOOK_ID). Updating..."
