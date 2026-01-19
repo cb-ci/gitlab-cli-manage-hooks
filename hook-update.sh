@@ -14,7 +14,7 @@ echo "--------------------------------------------------"
 for PROJECT in "${PROJECTS[@]}"
 do
     echo "Processing Project: $PROJECT"
-    PROJECT=$GROUP/$PROJECT
+    PROJECT=$GITLAB_GROUP/$PROJECT
     ENCODED_PROJECT=$(echo "$PROJECT" | sed 's/\//%2F/g')
 
     # 2. Check for existing hook in the target project

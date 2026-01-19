@@ -4,36 +4,29 @@
 # Your GitLab Personal Access Token (Scope: api)
 export GITLAB_TOKEN="YOUR_GITLAB_TOKEN"
 
-# The Webhook URL you want to manage
+# The Webhook URL you want to add/update/delete
 export WEBHOOK_TARGET="YOUR_WEBHOOK_TARGET" # fe.e "https://ci.webhook.example.com/hook"
 
 # The Base API URL (Change if using self-hosted GitLab)
 export API_URL="https://gitlab.com/api/v4"
 
-export GROUP="YOUR_GITLAB_GROUP"
+# The GitLab Group that contains the projects
+export GITLAB_GROUP="YOUR_GITLAB_GROUP"
 
-# List of Project Paths (Namespace/ProjectName) or Numeric IDs
+# List of GitLab Project Paths (will be concatinated to GITLAB_GROUP/PROJECT_NAME)
 # You can add as many as you need inside the parentheses
 export PROJECTS=(
-    "YOUR_PROJECT1"
-    "YOUR_PROJECT2"
-    "YOUR_PROJECTN"
+    "PROJECT_NAME1"
+    "PROJECT_NAME2"
+    "PROJECT_NAME3"
 )
-
-# example
-#export PROJECTS=(
-#    "group12345678/project1"
-#    "group12345678/project2"
-#    "group12345678/projectN"
-#)
-
 
 ## Below varialbes are required for the hook-update.sh script 
 
-# Reference Webhook URL (The hook on the reference project to copy permissions from)
+# Reference Origin Webhook URL (The hook on the reference project to copy permissions and payload from)
 export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
 
-# Webhook Secret Token (Optional - leave empty if none)
+# Webhook Secret Token for the WEBHOOK_TARGET(Optional - leave empty if none)
 export WEBHOOK_SECRET="your_secret_token"
 
 
