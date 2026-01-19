@@ -2,11 +2,10 @@
 
 This repository contains 3 scripts to manage webhooks in GitLab projects:
 
-- [hook-add-simple.sh](hook-add-simple.sh): Adds a webhook to a list of projects.
-- [hook-update-simple.sh](hook-update-simple.sh): Adds or Updates a webhook on a list of projects, copying permissions from an existing hook (Reference URL) to a new Target URL on the same project.
- Optional, you can set a webhook secret 
-- [hook-delete.sh](hook-delete.sh): Deletes a webhook from a list of projects.
-- [set-env.sh.template](set-env.sh.template): Common configurations for both hook script (above). 
+- [hook-add.sh](hook-add.sh): **Smart Add/Update**. Adds a webhook to a list of projects by copying permissions from an **existing** hook (Reference URL) to a new Target URL. If the Target URL already exists, it updates it. *Note: Requires the Reference URL to exist on the project.*
+- [hook-add-simple.sh](hook-add-simple.sh): **Simple Add (Bootstrap)**. Adds a webhook with default permissions to a list of projects. Use this for adding hooks to new projects that have none.
+- [hook-delete.sh](hook-delete.sh): Deletes a webhook (Target URL) from a list of projects.
+- [set-env.sh.template](set-env.sh.template): Common configurations for the scripts.
 >  cp set-env.sh.template set-env.sh
 
 ## Architecture Migration
@@ -54,7 +53,7 @@ flowchart TD
     
     subgraph Scripts
         Add[hook-add.sh]
-        Update[hook-update.sh]
+        AddSimple[hook-add-simple.sh]
         Delete[hook-delete.sh]
     end
     
@@ -65,27 +64,27 @@ flowchart TD
 
     User -->|Configures| Config
     Config --> Add
-    Config --> Update
+    Config --> AddSimple
     Config --> Delete
     
-    Add -->|Checks existence| TargetProjects
-    Add -->|POST if missing| TargetProjects
+    Add -->|1. List Hooks| TargetProjects
+    Add -->|2. Extract Config from Ref| RefProject
+    Add -->|3. POST (Create) or PUT (Update)| TargetProjects
     
-    Update -->|1. List Hooks| TargetProjects
-    Update -->|2. Extract Config from Ref URL| TargetProjects
-    Update -->|3. POST/PUT to Target URL| TargetProjects
-    
+    AddSimple -->|1. Check existence| TargetProjects
+    AddSimple -->|2. POST if missing| TargetProjects
+
     Delete -->|Checks existance| TargetProjects
     Delete -->|DELETE if found| TargetProjects
     
     style Add fill:#d4f1f4,stroke:#000,stroke-width:2px
-    style Update fill:#d4f1f4,stroke:#000,stroke-width:2px
+    style AddSimple fill:#e1f7d5,stroke:#000,stroke-width:2px
     style Delete fill:#f4d4d4,stroke:#000,stroke-width:2px
 ```
 
 ## Configuration
 
-Create your copy of the `set-env.sh`and adjust your variables
+Create your copy of the `set-env.sh` and adjust your variables:
     
 ```bash
   cp set-env.sh.template set-env.sh
@@ -96,8 +95,8 @@ Both scripts read their configuration from the top of the file. You need to set 
 - `WEBHOOK_TARGET`: The URL of the webhook to add or delete.
 - `PROJECTS`: A list of project paths or numeric IDs.
 
-**For `hook-update.sh` specifically:**
-- `WEBHOOK_REFERENCE_URL`: The URL of the existing hook to copy permissions from.
+**For `hook-add.sh` specifically:**
+- `WEBHOOK_REFERENCE_URL`: (Optional) The URL of the existing hook *on the same project* to copy permissions from. If unset, it will look for `WEBHOOK_TARGET` to update itself.
 - `WEBHOOK_SECRET`: (Optional) The secret token for the hook.
 
 ## Usage
@@ -105,13 +104,17 @@ Both scripts read their configuration from the top of the file. You need to set 
 2. Make the scripts executable:
 ```bash
 chmod +x hook-add.sh
+chmod +x hook-add-simple.sh
 chmod +x hook-delete.sh
-chmod +x hook-update.sh
 ```
 3. Run the desired script:
+```bash
 ./hook-add-simple.sh
+# or
 ./hook-delete.sh
-./hook-update-simple.sh
+# or
+./hook-add.sh
+```
 
 
 Manual step-by-step guide to securely connecting GitLab to Jenkins using a Secret Token.

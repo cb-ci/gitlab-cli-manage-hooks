@@ -21,12 +21,10 @@ export PROJECTS=(
     "PROJECT_NAME3"
 )
 
-## Below varialbes are required for the hook-update.sh script 
-
-# Reference Origin Webhook URL (The hook on the reference project to copy permissions and payload from)
+## Below varialbes are optional. Just used in the hook-update.sh script 
+# Reference Origin Webhook URL (Optional - The hook on the reference project to copy permissions and payload from)
 export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
-
-# Webhook Secret Token for the WEBHOOK_TARGET(Optional - leave empty if none)
+# Webhook Secret Token for the WEBHOOK_TARGET (Optional - leave empty if none)
 export WEBHOOK_SECRET="your_secret_token"
 
 
