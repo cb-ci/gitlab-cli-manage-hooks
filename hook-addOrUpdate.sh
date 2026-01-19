@@ -11,7 +11,7 @@ fi
 echo "✅ Reference config loaded."
 echo "--------------------------------------------------"
 
-
+# Create the payload
 createPayLoad() {
     local list_body="$1"
     local hook_payload
@@ -74,50 +74,52 @@ do
     LIST_RESPONSE=$(curl --silent --write-out "\n%{http_code}" \
         --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
         "$API_URL/projects/$ENCODED_PROJECT/hooks")
-    
+    # 3. Check list status
     LIST_STATUS=$(echo "$LIST_RESPONSE" | tail -n1)
+    # 4. Get list body
     LIST_BODY=$(echo "$LIST_RESPONSE" | sed '$d')
     if [ "$LIST_STATUS" -ne 200 ]; then
         echo "⚠️ FAILED to list hooks for $PROJECT (Status: $LIST_STATUS). Skipping."
         continue
     fi
 
-    # Find if the target hook already exists
+    # 5. Find if the target hook already exists
     EXISTING_HOOK_ID=$(echo "$LIST_BODY" | jq -r --arg url "$WEBHOOK_TARGET" '.[] | select(.url == $url) | .id')
 
-    # Create the payload using the extracted function
+    # 6. Create the payload using the extracted function
     HOOK_PAYLOAD=$(createPayLoad "$LIST_BODY")
 
     echo "Hook payload: $HOOK_PAYLOAD"
 
-
+    # 7. Update existing hook (PUT)
     if [ -n "$EXISTING_HOOK_ID" ] && [ "$EXISTING_HOOK_ID" != "null" ]; then
         echo "ℹ️ Hook exists (ID: $EXISTING_HOOK_ID). Updating..."
         
-        # 3. Update existing hook (PUT)
+        # 8. Update existing hook (PUT)
         UPDATE_STATUS=$(curl --silent --output /dev/null --write-out "%{http_code}" \
             --request PUT \
             --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
             --header "Content-Type: application/json" \
             --data "$HOOK_PAYLOAD" \
             "$API_URL/projects/$ENCODED_PROJECT/hooks/$EXISTING_HOOK_ID")
-
+        # 8. Check update status
         if [ "$UPDATE_STATUS" -eq 200 ]; then
             echo "✅ SUCCESS: Hook updated."
         else
             echo "❌ ERROR: Failed to update hook (Status: $UPDATE_STATUS)."
         fi
+    # 9 . Create new hook (POST)
     else
         echo "ℹ️ Hook does not exist. Creating..."
         
-        # 4. Create new hook (POST)
+        # 10. Create new hook (POST)
         CREATE_STATUS=$(curl --silent --output /dev/null --write-out "%{http_code}" \
             --request POST \
             --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
             --header "Content-Type: application/json" \
             --data "$HOOK_PAYLOAD" \
             "$API_URL/projects/$ENCODED_PROJECT/hooks")
-
+        # 11. Check create status
         if [ "$CREATE_STATUS" -eq 201 ]; then
             echo "✅ SUCCESS: Hook added."
         else
