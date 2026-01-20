@@ -25,8 +25,12 @@ export PROJECTS=(
 # Reference Origin Webhook URL (Optional - The hook on the reference project to copy permissions and payload from)
 export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
 
+
+# Webhook Secret Token (Optional - leave empty if none)
+export WEBHOOK_SECRET="your_secret_token"
+
 # Default payload structure
-PAYLOAD_DEFAULT='{url: $url, push_events: true}'
+export PAYLOAD_DEFAULT='{url: $url, push_events: true}'
 
 # Fields to copy from the reference hook
 export PAYLOAD_FROM_REF_HOOK='{
@@ -57,11 +61,7 @@ export PAYLOAD_FROM_REF_HOOK='{
     resource_access_token_events,
     vulnerability_events}
 '
-#export WEBHOOK_REFERENCE_URL=""
-#unset WEBHOOK_REFERENCE_URL
 
-# Webhook Secret Token (Optional - leave empty if none)
-export WEBHOOK_SECRET="your_secret_token"
 
 
 
