@@ -11,6 +11,7 @@ fi
 echo "✅ Reference config loaded."
 echo "--------------------------------------------------"
 
+
 # Create the payload
 createPayLoad() {
     local list_body="$1"
@@ -19,43 +20,18 @@ createPayLoad() {
     # The default payload, if no WEBHOOK_REFERENCE_URL is set
     hook_payload=$(jq -n \
         --arg url "$WEBHOOK_TARGET" \
-        '{url: $url, push_events: true}')
-    
+        "$PAYLOAD_DEFAULT")
+
     # If a reference WEBHOOK_REFERENCE_URL is set, copy permissions from it
     if [ ! -z "$WEBHOOK_REFERENCE_URL" ]; then
         echo -n "✅ Reference URL set to $WEBHOOK_REFERENCE_URL." >&2
         echo "" >&2
-        hook_payload=$(echo "$list_body" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" '
-                .[] | select(.url == $url) | 
+        hook_payload=$(echo "$list_body" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" "
+                .[] | select(.url == \$url) | 
                 {
-                    url: $target_url,
-                    push_events,
-                    tag_push_events,
-                    merge_requests_events,
-                    repository_update_events,
-                    enable_ssl_verification,
-                    alert_status,
-                    disabled_until,
-                    push_events_branch_filter,
-                    branch_filter_strategy,
-                    custom_webhook_template,
-                    project_id,
-                    issues_events,
-                    confidential_issues_events,
-                    note_events,
-                    confidential_note_events,
-                    pipeline_events,
-                    wiki_page_events,
-                    deployment_events,
-                    feature_flag_events,
-                    job_events,
-                    releases_events,
-                    milestone_events,
-                    emoji_events,
-                    resource_access_token_events,
-                    vulnerability_events
+                    $PAYLOAD_FROM_REF_HOOK
                 }
-                ')
+                ")
     fi
 
     # Add secret if WEBHOOK_SECRET set

@@ -24,7 +24,43 @@ export PROJECTS=(
 ## Below varialbes are optional. Just used in the hook-update.sh script 
 # Reference Origin Webhook URL (Optional - The hook on the reference project to copy permissions and payload from)
 export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
-# Webhook Secret Token for the WEBHOOK_TARGET (Optional - leave empty if none)
+
+# Default payload structure
+PAYLOAD_DEFAULT='{url: $url, push_events: true}'
+
+# Fields to copy from the reference hook
+export PAYLOAD_FROM_REF_HOOK='
+    url: $target_url,
+    push_events,
+    tag_push_events,
+    merge_requests_events,
+    repository_update_events,
+    enable_ssl_verification,
+    alert_status,
+    disabled_until,
+    push_events_branch_filter,
+    branch_filter_strategy,
+    custom_webhook_template,
+    project_id,
+    issues_events,
+    confidential_issues_events,
+    note_events,
+    confidential_note_events,
+    pipeline_events,
+    wiki_page_events,
+    deployment_events,
+    feature_flag_events,
+    job_events,
+    releases_events,
+    milestone_events,
+    emoji_events,
+    resource_access_token_events,
+    vulnerability_events
+'
+#export WEBHOOK_REFERENCE_URL=""
+#unset WEBHOOK_REFERENCE_URL
+
+# Webhook Secret Token (Optional - leave empty if none)
 export WEBHOOK_SECRET="your_secret_token"
 
 
