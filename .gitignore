@@ -1,2 +1,7 @@
 /set-env.sh
-.ide
+.idea
+/tests/
+/run-tests.sh
+/set-env-cloud.sh
+
+

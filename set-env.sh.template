@@ -29,7 +29,7 @@ export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
 PAYLOAD_DEFAULT='{url: $url, push_events: true}'
 
 # Fields to copy from the reference hook
-export PAYLOAD_FROM_REF_HOOK='
+export PAYLOAD_FROM_REF_HOOK='{
     url: $target_url,
     push_events,
     tag_push_events,
@@ -55,7 +55,7 @@ export PAYLOAD_FROM_REF_HOOK='
     milestone_events,
     emoji_events,
     resource_access_token_events,
-    vulnerability_events
+    vulnerability_events}
 '
 #export WEBHOOK_REFERENCE_URL=""
 #unset WEBHOOK_REFERENCE_URL

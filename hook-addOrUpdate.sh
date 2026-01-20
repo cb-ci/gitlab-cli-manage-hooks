@@ -27,10 +27,8 @@ createPayLoad() {
         echo -n "✅ Reference URL set to $WEBHOOK_REFERENCE_URL." >&2
         echo "" >&2
         hook_payload=$(echo "$list_body" | jq -c --arg url "$WEBHOOK_REFERENCE_URL" --arg target_url "$WEBHOOK_TARGET" "
-                .[] | select(.url == \$url) | 
-                {
-                    $PAYLOAD_FROM_REF_HOOK
-                }
+                .[] | select(.url == \$url) |                 
+                    $PAYLOAD_FROM_REF_HOOK                
                 ")
     fi
 
