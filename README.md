@@ -125,7 +125,7 @@ chmod +x hook-delete.sh
 ## Example 1: Add or Update Webhook (Default Payload)
 
 This configuration adds or updates the `WEBHOOK_TARGET` on all projects in the `GITLAB_GROUP`.
-Since no `WEBHOOK_REFERENCE_URL` is configured, the default payload PAYLOAD_DEFAULT is used.
+Since no `WEBHOOK_REFERENCE_URL` is configured, the default payload `PAYLOAD_DEFAULT` is used.
 
 **Default Payload:**
 ```json
@@ -157,17 +157,12 @@ export PROJECTS=(
     "PROJECT_NAME1"
     "PROJECT_NAME2"
     "PROJECT_NAME3"
-)
-```
 
 ## Example 2: Copy Configuration from Existing Webhook
 
-If `WEBHOOK_REFERENCE_URL` is set, the script copies the configuration (permissions, events, SSL settings) from that reference hook instead of using the defaults. All custom PAYLOAD_FROM_REF_HOOK settings are copied from the reference hook.
+If `WEBHOOK_REFERENCE_URL` is set, the script copies the configuration (permissions, events, SSL settings) from that reference hook instead of using the defaults. All custom `PAYLOAD_FROM_REF_HOOK` settings are copied from the reference hook.
 
 **Example Payload copied from Reference:**
-```json
-{
-  "url": "https://webhook.example.com/hook",
   "push_events": true,
   "tag_push_events": true,
   "merge_requests_events": true,
