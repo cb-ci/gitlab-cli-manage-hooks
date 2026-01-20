@@ -162,6 +162,31 @@ export PROJECTS=(
 # Default payload structure
 export PAYLOAD_DEFAULT='{url: $url, push_events: true}'
 
+```
+
+## Example 2: Copy Configuration from Existing Webhook
+
+If `WEBHOOK_REFERENCE_URL` is set, the script copies the configuration (permissions, events, SSL settings) from that reference hook instead of using the defaults. All custom `PAYLOAD_FROM_REF_HOOK` settings are copied from the reference hook.
+
+**Example Payload copied from Reference:**
+
+```json
+{
+  "push_events": true,
+  "tag_push_events": true,
+  "merge_requests_events": true,
+  "enable_ssl_verification": true,
+  "issues_events": true,
+  "note_events": true
+}
+```
+
+**`set-env.sh` (additions):**
+```bash
+# Reference Origin Webhook URL 
+# (The settings from this hook will be copied to the new WEBHOOK_TARGET)
+export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
+
 # Fields to copy from the reference hook
 export PAYLOAD_FROM_REF_HOOK='{
     url: $target_url,
@@ -191,30 +216,6 @@ export PAYLOAD_FROM_REF_HOOK='{
     resource_access_token_events,
     vulnerability_events}
 '
-
-```
-
-## Example 2: Copy Configuration from Existing Webhook
-
-If `WEBHOOK_REFERENCE_URL` is set, the script copies the configuration (permissions, events, SSL settings) from that reference hook instead of using the defaults. All custom `PAYLOAD_FROM_REF_HOOK` settings are copied from the reference hook.
-
-**Example Payload copied from Reference:**
-```
-{
-  "push_events": true,
-  "tag_push_events": true,
-  "merge_requests_events": true,
-  "enable_ssl_verification": true,
-  "issues_events": true,
-  "note_events": true
-}
-```
-
-**`set-env.sh` (additions):**
-```bash
-# Reference Origin Webhook URL 
-# (The settings from this hook will be copied to the new WEBHOOK_TARGET)
-export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
 ```
 
 ## Example 3: Secure Webhook with Secret Token
