@@ -83,12 +83,16 @@ Create your copy of the `set-env.sh` and adjust your variables:
 ```bash
   cp set-env.sh.template set-env.sh
 ```
-Both scripts read their configuration from the top of the file. You need to set the following variables in `set-env.sh`:
+Al scripts read their configuration from the top of the file. You need to set the following variables in `set-env.sh`:
 
+Required:
 - `GITLAB_TOKEN`: Your GitLab Personal Access Token with `api` scope.
+- `API_URL`: The Base API URL (Change if using self-hosted GitLab)
 - `WEBHOOK_TARGET`: The URL of the webhook to add or delete.
+- `GITLAB_GROUP`: The GitLab Group that contains the projects.
 - `PROJECTS`: A list of project paths or numeric IDs.
 
+Optional:
 **For `hook-addOrUpdate.sh` specifically:**
 - `WEBHOOK_REFERENCE_URL`: (Optional) The URL of the existing hook *on the same project* to copy permissions from. If unset, it will look for `WEBHOOK_TARGET` to update itself.
 - `WEBHOOK_SECRET`: (Optional) The secret token for the hook.
