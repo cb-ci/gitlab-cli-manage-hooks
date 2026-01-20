@@ -1,5 +1,7 @@
 # GitLab Webhook Management Scripts
 
+See https://plugins.jenkins.io/gitlab-plugin/#plugin-content-job-trigger-configuration for more information on how to configure the GitLab plugin in Jenkins.
+
 This repository contains 3 scripts to manage webhooks in GitLab projects:
 
 - [hook-addOrUpdate.sh](hook-addOrUpdate.sh): **Smart Add/Update**. Adds a webhook to a list of projects by copying permissions from an **existing** hook (Reference URL) to a new Target URL. If the Target URL already exists, it updates it. *Note: Requires the Reference URL to exist on the project.*
