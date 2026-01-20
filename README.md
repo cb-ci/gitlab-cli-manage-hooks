@@ -157,6 +157,41 @@ export PROJECTS=(
     "PROJECT_NAME1"
     "PROJECT_NAME2"
     "PROJECT_NAME3"
+)
+
+# Default payload structure
+export PAYLOAD_DEFAULT='{url: $url, push_events: true}'
+
+# Fields to copy from the reference hook
+export PAYLOAD_FROM_REF_HOOK='{
+    url: $target_url,
+    push_events,
+    tag_push_events,
+    merge_requests_events,
+    repository_update_events,
+    enable_ssl_verification,
+    alert_status,
+    disabled_until,
+    push_events_branch_filter,
+    branch_filter_strategy,
+    custom_webhook_template,
+    project_id,
+    issues_events,
+    confidential_issues_events,
+    note_events,
+    confidential_note_events,
+    pipeline_events,
+    wiki_page_events,
+    deployment_events,
+    feature_flag_events,
+    job_events,
+    releases_events,
+    milestone_events,
+    emoji_events,
+    resource_access_token_events,
+    vulnerability_events}
+'
+
 ```
 
 ## Example 2: Copy Configuration from Existing Webhook
@@ -164,6 +199,8 @@ export PROJECTS=(
 If `WEBHOOK_REFERENCE_URL` is set, the script copies the configuration (permissions, events, SSL settings) from that reference hook instead of using the defaults. All custom `PAYLOAD_FROM_REF_HOOK` settings are copied from the reference hook.
 
 **Example Payload copied from Reference:**
+```
+{
   "push_events": true,
   "tag_push_events": true,
   "merge_requests_events": true,
