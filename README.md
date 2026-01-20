@@ -157,6 +157,7 @@ export PROJECTS=(
     "PROJECT_NAME1"
     "PROJECT_NAME2"
     "PROJECT_NAME3"
+```
 
 ## Example 2: Copy Configuration from Existing Webhook
 
