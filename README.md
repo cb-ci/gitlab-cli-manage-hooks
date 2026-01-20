@@ -116,6 +116,88 @@ chmod +x hook-delete.sh
 ./hook-addOrUpdate.sh
 ```
 
+# Example Configurations
+
+## Example 1: Add or Update Webhook (Default Payload)
+
+This configuration adds or updates the `WEBHOOK_TARGET` on all projects in the `GITLAB_GROUP`.
+Since no `WEBHOOK_REFERENCE_URL` is configured, the default payload is used.
+
+**Default Payload:**
+```json
+{
+  "url": "https://webhook.example.com/hook",
+  "push_events": true
+}
+```
+
+**`set-env.sh` configuration:**
+```bash
+#!/bin/bash
+
+# --- CONFIGURATION ---
+# Your GitLab Personal Access Token (Scope: api)
+export GITLAB_TOKEN="glpat-..."
+
+# The Webhook URL you want to add/update
+export WEBHOOK_TARGET="https://ci.webhook.example.com/hook"
+
+# The Base API URL (Change if using self-hosted GitLab)
+export API_URL="https://gitlab.com/api/v4"
+
+# The GitLab Group that contains the projects
+export GITLAB_GROUP="gitlabgroup1"
+
+# List of GitLab Project Paths (will be concatenated to GITLAB_GROUP/PROJECT_NAME)
+export PROJECTS=(
+    "PROJECT_NAME1"
+    "PROJECT_NAME2"
+    "PROJECT_NAME3"
+)
+```
+
+## Example 2: Copy Configuration from Existing Webhook
+
+If `WEBHOOK_REFERENCE_URL` is set, the script copies the configuration (permissions, events, SSL settings) from that reference hook instead of using the defaults.
+
+**Example Payload copied from Reference:**
+```json
+{
+  "url": "https://webhook.example.com/hook",
+  "push_events": true,
+  "tag_push_events": true,
+  "merge_requests_events": true,
+  "enable_ssl_verification": true,
+  "issues_events": true,
+  "note_events": true
+}
+```
+
+**`set-env.sh` (additions):**
+```bash
+# Reference Origin Webhook URL 
+# (The settings from this hook will be copied to the new WEBHOOK_TARGET)
+export WEBHOOK_REFERENCE_URL="https://ci.webhook.example.com/hook"
+```
+
+## Example 3: Secure Webhook with Secret Token
+
+Setting the `WEBHOOK_SECRET` variable adds a secret token to the webhook payload. This is highly recommended for security.
+
+**Payload with Secret:**
+```json
+{
+  "url": "https://webhook.example.com/hook",
+  "token": "your_secure_secret_token",
+  ...
+}
+```
+
+**`set-env.sh` (additions):**
+```bash
+export WEBHOOK_SECRET="your_secure_secret_token"
+```
+
 
 # Manual step-by-step guide to securely connecting GitLab to Jenkins using a Secret Token.
 
