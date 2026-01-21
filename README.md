@@ -4,7 +4,8 @@ See https://plugins.jenkins.io/gitlab-plugin/#plugin-content-job-trigger-configu
 
 This repository contains 3 scripts to manage webhooks in GitLab projects:
 
-- [hook-addOrUpdate.sh](hook-addOrUpdate.sh): **Smart Add/Update**. Adds a webhook to a list of projects by copying permissions from an **existing** hook (Reference URL) to a new Target URL. If the Target URL already exists, it updates it. *Note: Requires the Reference URL to exist on the project.*
+- [hook-addOrUpdate.sh](hook-addOrUpdate.sh): **Smart Add/Update**. Adds a webhook to a list of projects by copying permissions from an **existing** hook (Reference URL) to a new Target URL. If the Target URL already exists, it updates it. 
+    *Note: Requires the Reference URL to exist on the project.*
 - [hook-add-simple.sh](hook-add-simple.sh): **Simple Add (Bootstrap)**. Adds a webhook with default permissions to a list of projects. Use this for adding hooks to new projects that have none.
 - [hook-delete.sh](hook-delete.sh): Deletes a webhook (Target URL) from a list of projects.
 - [set-env.sh.template](set-env.sh.template): Common configurations for the scripts.
